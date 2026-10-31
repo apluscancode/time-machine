@@ -1,0 +1,174 @@
+/* ماشین زمان — Time Machine */
+@font-face{
+  font-family:'Vazirmatn';
+  src:url('fonts/Vazirmatn-Regular.woff2') format('woff2');
+  font-weight:400;font-style:normal;font-display:swap;
+}
+@font-face{
+  font-family:'Vazirmatn';
+  src:url('fonts/Vazirmatn-Bold.woff2') format('woff2');
+  font-weight:700;font-style:normal;font-display:swap;
+}
+:root{
+  --bg:#0b0e14;
+  --panel:#12161f;
+  --panel2:#171c26;
+  --bd:#232a37;
+  --tx:#e8edf5;
+  --tx2:#8e9ab0;
+  --tx3:#a4b0c6;
+  --acc:#f0b429;          /* gold accent */
+  --good:#22c55e;
+  --bad:#ef4444;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  background:var(--bg);color:var(--tx);
+  font-family:'Vazirmatn',"Noto Sans Arabic",-apple-system,BlinkMacSystemFont,"Segoe UI",
+              Roboto,Helvetica,Arial,Tahoma,sans-serif;
+  line-height:1.75;min-height:100vh;
+  background-image:
+    radial-gradient(700px 380px at 88% -8%, rgba(240,180,41,.10), transparent 62%),
+    radial-gradient(620px 340px at 6% 4%, rgba(120,90,255,.07), transparent 60%);
+  background-attachment:fixed;
+}
+.wrap{max-width:1020px;margin:0 auto;padding:34px 20px 70px}
+
+.head{text-align:center;margin-bottom:26px}
+h1{font-size:clamp(1.9rem,5vw,2.9rem);font-weight:800;letter-spacing:-.01em;margin-bottom:8px}
+.ico{font-size:.95em}
+.sub{color:var(--tx2);font-size:1rem}
+
+/* ---- controls ---- */
+.controls{
+  display:grid;grid-template-columns:minmax(210px,1fr) minmax(280px,1.5fr);
+  gap:18px;background:var(--panel);border:1px solid var(--bd);
+  border-radius:16px;padding:20px;margin-bottom:24px;
+}
+@media(max-width:640px){.controls{grid-template-columns:1fr}}
+.field label{display:block;font-size:.88rem;font-weight:700;margin-bottom:8px;color:var(--tx3)}
+select,input[type=text]{
+  width:100%;padding:12px 14px;background:var(--panel2);color:var(--tx);
+  border:1px solid var(--bd);border-radius:11px;font:inherit;font-size:1rem;
+}
+select:focus,input:focus{outline:2px solid rgba(240,180,41,.45);outline-offset:1px;border-color:transparent}
+.amount-wrap{position:relative}
+.amount-wrap input{padding-right:62px;font-variant-numeric:tabular-nums;font-weight:600}
+.amount-wrap .unit{
+  position:absolute;right:14px;top:50%;transform:translateY(-50%);
+  color:var(--tx2);font-size:.86rem;pointer-events:none;
+}
+.hint{font-size:.8rem;color:var(--tx2);margin-top:7px}
+.quick{display:flex;gap:7px;flex-wrap:wrap;margin-top:11px}
+.quick button{
+  padding:6px 13px;border-radius:9px;border:1px solid var(--bd);background:var(--panel2);
+  color:var(--tx2);font:inherit;font-size:.82rem;cursor:pointer;transition:.15s;
+}
+.quick button:hover{border-color:var(--acc);color:var(--acc)}
+
+/* ---- results ---- */
+.results{display:flex;flex-direction:column;gap:12px;margin-bottom:22px}
+.row{
+  background:var(--panel);border:1px solid var(--bd);border-radius:14px;
+  padding:16px 18px;display:grid;
+  grid-template-columns:46px minmax(150px,1.1fr) minmax(200px,1.6fr) auto;
+  gap:16px;align-items:center;
+  transition:border-color .25s, transform .25s, background .25s;
+}
+@media(max-width:760px){
+  .row{grid-template-columns:40px 1fr;gap:12px}
+  .row .now{grid-column:2}
+  .row .mult{grid-column:2}
+}
+.row:hover{border-color:#31405a;background:var(--panel2)}
+.row.top{border-color:rgba(240,180,41,.5);background:linear-gradient(90deg,rgba(240,180,41,.08),transparent 60%)}
+.icon{font-size:1.7rem;text-align:center;line-height:1}
+.name{font-weight:700;font-size:1rem}
+.name small{display:block;color:var(--tx2);font-weight:400;font-size:.76rem;margin-top:2px}
+.bar-cell{min-width:0}
+.bar{
+  height:8px;border-radius:5px;background:#1d2430;overflow:hidden;margin-bottom:6px;
+}
+.bar i{display:block;height:100%;border-radius:5px;background:linear-gradient(90deg,#f0b429,#ff8a3d)}
+.bar i.neg{background:linear-gradient(90deg,#ef4444,#b91c1c)}
+.now{font-size:.85rem;color:var(--tx3)}
+.now b{color:var(--tx);font-variant-numeric:tabular-nums}
+.mult{text-align:left;white-space:nowrap}
+.mult .m{
+  font-size:1.35rem;font-weight:800;font-variant-numeric:tabular-nums;
+  color:var(--good);line-height:1.25;
+}
+.mult .m.neg{color:var(--bad)}
+.mult .pct{font-size:.82rem;color:var(--tx3);font-variant-numeric:tabular-nums}
+.badge{
+  display:inline-block;padding:2px 9px;border-radius:999px;font-size:.7rem;
+  font-weight:700;margin-top:4px;
+}
+.badge.best{background:rgba(240,180,41,.16);color:var(--acc);border:1px solid rgba(240,180,41,.4)}
+.badge.worst{background:rgba(239,68,68,.14);color:#f87171;border:1px solid rgba(239,68,68,.32)}
+
+.stamp{text-align:center;color:var(--tx2);font-size:.8rem;margin-bottom:24px}
+.foot{text-align:center;color:var(--tx2);font-size:.82rem;line-height:2}
+.foot p{margin-bottom:4px}
+.muted{color:#6b7688;font-size:.78rem}
+
+.empty{
+  text-align:center;color:var(--tx2);padding:34px 18px;background:var(--panel);
+  border:1px dashed var(--bd);border-radius:14px;font-size:.94rem;
+}
+.err{color:#f87171;font-size:.86rem;text-align:center;margin-bottom:16px}
+
+/* ---- wage gradient box ---- */
+.wage-box{
+  margin:18px 0 22px;background:var(--panel);border:1px solid var(--bd);
+  border-radius:16px;padding:20px 22px;
+}
+.wage-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:38px}
+.wage-title{font-size:1.02rem;font-weight:700}
+.wage-title b{color:var(--acc);font-variant-numeric:tabular-nums}
+.wage-sub{font-size:.86rem;color:var(--tx3);font-variant-numeric:tabular-nums}
+.wage-track{
+  position:relative;height:14px;border-radius:8px;overflow:visible;
+  background:#1d2430;border:1px solid #2a3240;
+}
+.wage-fill{
+  position:absolute;right:0;top:0;bottom:0;border-radius:8px;
+  background:linear-gradient(270deg,#7a5a18 0%,#c9922a 55%,#f0b429 85%,#ffd76e 100%);
+  box-shadow:0 0 14px rgba(240,180,41,.35);
+  transition:width .4s cubic-bezier(.4,0,.2,1);
+}
+.wage-knob{
+  position:absolute;top:50%;width:16px;height:16px;border-radius:50%;
+  background:#fff;box-shadow:0 0 0 4px rgba(240,180,41,.35),0 2px 8px rgba(0,0,0,.5);
+  transform:translate(50%,-50%);transition:right .4s cubic-bezier(.4,0,.2,1);
+}
+.wage-readout{
+  position:absolute;top:-34px;transform:translateX(50%);
+  background:var(--panel2);border:1px solid var(--bd);border-radius:9px;
+  padding:3px 10px;font-size:.8rem;font-weight:700;color:var(--acc);
+  font-variant-numeric:tabular-nums;white-space:nowrap;pointer-events:none;
+  transition:right .4s cubic-bezier(.4,0,.2,1);
+}
+.wage-scale{
+  display:flex;justify-content:space-between;margin-top:9px;
+  font-size:.76rem;color:var(--tx3);font-variant-numeric:tabular-nums;
+}
+.wage-note{margin-top:11px;font-size:.85rem;color:var(--tx2);line-height:1.95}
+.wage-note b{color:var(--acc);font-variant-numeric:tabular-nums}
+
+/* ---- FAQ (also the source for the FAQPage JSON-LD) ---- */
+.faq{
+  margin-top:34px;background:var(--panel);border:1px solid var(--bd);
+  border-radius:16px;padding:22px 24px;
+}
+.faq h2{font-size:1.2rem;font-weight:700;margin-bottom:14px}
+.faq details{border-top:1px solid var(--bd);padding:13px 0}
+.faq details:first-of-type{border-top:0}
+.faq summary{
+  cursor:pointer;font-weight:600;font-size:.96rem;color:var(--tx);
+  list-style:none;display:flex;justify-content:space-between;align-items:center;gap:12px;
+}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"＋";color:var(--acc);font-size:1.1rem;flex:none}
+.faq details[open] summary::after{content:"−"}
+.faq p{margin-top:10px;color:var(--tx2);font-size:.92rem;line-height:2}
