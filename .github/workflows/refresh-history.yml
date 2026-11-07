@@ -1,0 +1,95 @@
+name: Refresh market history
+
+# Rebuilds history.json from TGJU and pushes it to the Pages site.
+# The commit is force-pushed as a SINGLE squashed commit, so the repository
+# history never accumulates and the repo size stays flat forever.
+
+on:
+  schedule:
+    # twice a day, off the hour
+    - cron: '23 4,16 * * *'
+  workflow_dispatch:
+    inputs:
+      force:
+        description: 'Commit even if nothing changed'
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: refresh-history
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: true
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Rebuild history from TGJU
+        continue-on-error: true
+        run: |
+          python3 build_history.py
+          if [ ! -s history.json ]; then
+            echo "history.json missing — keeping the previous one"
+            git checkout -- history.json || true
+          fi
+
+      - name: Commit as a single squashed commit
+        run: |
+          set -euo pipefail
+          git config user.name  'pages-bot'
+          git config user.email 'pages-bot@users.noreply.github.com'
+
+          git add history.json dollar_history.json static_data.json build_history.py
+          if git diff --cached --quiet; then
+            if [ "${{ inputs.force }}" != "true" ]; then
+              echo "NO_CHANGE"
+              exit 0
+            fi
+            printf '\n' >> history.json
+            git add history.json
+          fi
+
+          tmp="__gh_$(date -u +%s)"
+          git checkout --orphan "$tmp"
+          git add -A
+          git commit -m "chore: refresh market history $(date -u +%Y-%m-%dT%H:%MZ)"
+          git push --force origin "$tmp":main
+          git checkout -B main origin/main
+          git branch -D "$tmp" || true
+
+      - name: Report
+        if: always()
+        run: |
+          {
+            echo "### Time Machine history refresh"
+            echo ""
+            if [ -f history.json ]; then
+              python3 - <<'PY'
+          import json
+          d = json.load(open('history.json'))
+          print("generated:", d.get('generated_at_display'))
+          for k, a in (d.get('assets') or {}).items():
+              ys = a.get('years') or {}
+              print(f"  {k:<12} {a.get('label','')}  {a.get('y_min')}..{a.get('y_max')}"
+                    f"  ({len(ys)} years)")
+          if d.get('errors'):
+              print("errors:", d['errors'])
+          PY
+            else
+              echo "history.json missing"
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
