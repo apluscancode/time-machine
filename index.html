@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ماشین زمان — سرمایه‌ات در گذشته چه می‌ارزید؟</title>
+<meta name="description" content="هر ۱۰۰۰ تومان در گذشته چقدر می‌ارزد؟ ماشین زمان: ارزش هر هزار تومان در سکه امامی، طلا ۱۸ عیار، دلار، مسکن تهران و سپرده بانکی از سال ۱۳۵۰ تا امروز.">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://apluscancode.github.io/time-machine/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="ماشین زمان — سرمایه‌ات در گذشته چه می‌ارزید؟">
+<meta property="og:description" content="ماشین زمان سرمایه ایران: سکه امامی، طلا ۱۸ عیار، دلار، مسکن تهران و سپرده بانکی.">
+<meta property="og:image" content="https://apluscancode.github.io/time-machine/og.png">
+<meta property="og:url" content="https://apluscancode.github.io/time-machine/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="ماشین زمان — سرمایه‌ات در گذشته چه می‌ارزید؟">
+<meta name="twitter:image" content="https://apluscancode.github.io/time-machine/og.png">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⏳</text></svg>">
+<link rel="preload" href="fonts/Vazirmatn-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="wrap">
+  <header class="head">
+    <h1><span class="ico">⏳</span> ماشین زمان</h1>
+    <p class="sub">هر ۱,۰۰۰ تومان در آن سال، امروز چقدر می‌ارزد؟</p>
+  </header>
+
+  <section class="controls">
+    <div class="field">
+      <label for="year">سال شمسی</label>
+      <select id="year"></select>
+      <p class="hint" id="yearHint"></p>
+    </div>
+
+    <div class="field">
+      <label for="amount">مبلغ اولیه (تومان)</label>
+      <div class="amount-wrap">
+        <input type="text" id="amount" inputmode="numeric" value="۱,۰۰۰,۰۰۰" autocomplete="off">
+        <span class="unit">تومان</span>
+      </div>
+      <div class="quick">
+        <button type="button" data-amt="1000000">۱ میلیون</button>
+        <button type="button" data-amt="10000000">۱۰ میلیون</button>
+        <button type="button" data-amt="100000000">۱۰۰ میلیون</button>
+        <button type="button" data-amt="1000000000">۱ میلیارد</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="results" id="results" aria-live="polite"></section>
+
+  <section class="wage-box" id="wageBox" hidden>
+    <div class="wage-head">
+      <span class="wage-title">پایه حقوق ماهانه در <b id="wageYear"></b></span>
+      <span class="wage-sub" id="wageSub"></span>
+    </div>
+    <div class="wage-track">
+      <div class="wage-fill" id="wageFill"></div>
+      <div class="wage-knob" id="wageKnob"></div>
+      <div class="wage-readout" id="wageReadout"></div>
+    </div>
+    <div class="wage-scale">
+      <span id="wageMin"></span>
+      <span id="wageMax"></span>
+    </div>
+    <p class="wage-note" id="wageNote"></p>
+  </section>
+
+  <p class="stamp" id="stamp"></p>
+
+  <footer class="foot">
+    <p>داده‌ها: <bdi>TGJU</bdi> (سکه امامی، طلا ۱۸، دلار) · گزارش‌های بانک مرکزی و مرکز آمار ایران (مسکن تهران) · مصوبه شورای پول و اعتبار (نرخ سود سپرده) · مصوبه شورای عالی کار (پایه حقوق)</p>
+    <p class="muted">قیمت‌ها «پایان سال» هستند — محاسبه تقریبی است و مشاوره مالی نیست. مبالغ همه به تومان.</p>
+  </footer>
+
+  <section class="faq">
+    <h2>سؤالات پرتکرار</h2>
+
+    <details>
+      <summary>ماشین زمان چطور کار می‌کند؟</summary>
+      <p>شما یک سال شمسی و یک مبلغ به تومان وارد می‌کنید. سایت قیمت آن بازار را در آن سال پیدا می‌کند، تعداد واحدی که با آن مبلغ می‌شد خرید (مثلاً ۱۰۶ سکه) را حساب می‌کند و سپس ارزش امروزِ همان تعداد را نشان می‌دهد.</p>
+    </details>
+
+    <details>
+      <summary>قیمت‌ها از کجا می‌آیند؟</summary>
+      <p>قیمت روزانه‌ی سکه امامی، طلا ۱۸ عیار، دلار و اونس جهانی از TGJU گرفته می‌شود. قیمت مسکن تهران از جدول سالانه‌ی گزارش‌های بانک مرکزی، مرکز آمار ایران و وزارت راه و شهرسازی و نرخ سود سپرده از مصوبه‌های شورای پول و اعتبار گرفته شده است.</p>
+    </details>
+
+    <details>
+      <summary>از چه سالی داده موجود است؟</summary>
+      <p>دلار از ۱۳۵۷، سکه امامی و طلا ۱۸ از ۱۳۵۸، مسکن تهران از ۱۳۵۰ و نرخ سود سپرده از ۱۳۶۳. برای سال‌هایی که TGJU سری روزانه ندارد، قیمت طلا از فرمول «اونس × دلار × (۰.۷۵ ÷ ۳۱.۱۰۳۵)» و قیمت سکه از «طلا ۱۸ × ۸.۱۳۳ گرم» محاسبه می‌شود.</p>
+    </details>
+
+    <details>
+      <summary>سپرده بانکی چطور محاسبه می‌شود؟</summary>
+      <p>برخلاف بقیه، سپرده خریده نمی‌شود. نرخ سود سالانه‌ی مصوب بانک مرکزی در هر سال روی اصل پول اعمال می‌شود (سود مرکب) و نتیجه تا سال جاری محاسبه می‌گردد.</p>
+    </details>
+
+    <details>
+      <summary>آیا اطلاعات من ذخیره می‌شود؟</summary>
+      <p>نه. سایت هیچ سرور و هیچ پایگاه داده‌ای ندارد و هیچ داده‌ای از شما ذخیره نمی‌شود. همه‌چیز در مرورگر خودتان محاسبه می‌شود.</p>
+    </details>
+  </section>
+</div>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "ماشین زمان — Time Machine",
+  "alternateName": "Time Machine Iran",
+  "url": "https://apluscancode.github.io/time-machine/",
+  "description": "سرمایه‌ی شما در یک سال شمسی گذشته، امروز در سکه امامی، طلا ۱۸ عیار، دلار، مسکن تهران و سپرده بانکی چقدر ارزش دارد.",
+  "applicationCategory": "FinanceApplication",
+  "operatingSystem": "Web",
+  "inLanguage": "fa-IR",
+  "isAccessibleForFree": true,
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "IRR" },
+  "featureList": [
+    "محاسبه ارزش سکه امامی در هر سال",
+    "محاسبه ارزش طلا ۱۸ عیار",
+    "محاسبه ارزش دلار",
+    "محاسبه ارزش مسکن تهران",
+    "محاسبه سود سپرده بانکی"
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "ماشین زمان چطور کار می‌کند؟",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "شما یک سال شمسی و یک مبلغ به تومان وارد می‌کنید. سایت قیمت آن بازار را در آن سال پیدا می‌کند، تعداد واحدی که با آن مبلغ می‌شد خرید را حساب می‌کند و سپس ارزش امروزِ همان تعداد را نشان می‌دهد."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "قیمت‌ها از کجا می‌آیند؟",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "قیمت روزانه‌ی سکه امامی، طلا ۱۸ عیار، دلار و اونس جهانی از TGJU گرفته می‌شود. قیمت مسکن تهران از گزارش‌های بانک مرکزی و مرکز آمار ایران و نرخ سود سپرده از مصوبه‌های شورای پول و اعتبار."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "از چه سالی داده موجود است؟",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "دلار از ۱۳۵۷، سکه امامی و طلا ۱۸ از ۱۳۵۸، مسکن تهران از ۱۳۵۰ و نرخ سود سپرده از ۱۳۶۳."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "آیا اطلاعات من ذخیره می‌شود؟",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "نه. سایت هیچ سرور و پایگاه داده‌ای ندارد و هیچ داده‌ای از شما ذخیره نمی‌شود."
+      }
+    }
+  ]
+}
+</script>
+
+<script src="app.js"></script>
+</body>
+</html>
